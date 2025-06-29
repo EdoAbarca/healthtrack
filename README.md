@@ -9,11 +9,11 @@ Como especialistas en automatización de pruebas, los estudiantes deberán evalu
 
 ## Stack
 
-FrontEnd: T.B.A. (¿Opcional?)
-BackEnd: Java Maven Spring Boot
-BD: T.B.A. (Opcional para este contexto)
-CI/CD: Github Actions
-Testing: JUnit (Spring Boot lo incluye por defecto), SonarQube, Selenium, JMeter
+- FrontEnd: T.B.A. (¿Opcional?)
+- BackEnd: Java Maven Spring Boot
+- BD: T.B.A. (Opcional para este contexto)
+- CI/CD: Github Actions
+- Testing: JUnit (Spring Boot lo incluye por defecto), SonarQube, Selenium & JMeter
 
 ## Resultados
 
