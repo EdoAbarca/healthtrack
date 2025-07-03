@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Healthtrack: Your weight over time</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+    <h1>Welcome to Healthtrack!</h1>
+    <p>This application allows you to track your current weight.</p>
+
+    <h2>Your data</h2>
+    <ul id="data">
+        <li id="name">Name: Loading...</li>
+        <li id="current-weight">Weight: Loading...</li>
+    </ul>
+
+    <h2>Add new weight</h2>
+    <form id="weight-form">
+        <label>
+            Weight (kg):
+            <input type="number" id="weight" step="0.1" required>
+        </label>
+        <button type="submit" id="add-btn">Add</button>
+    </form>
+    <div id="thanks-message" style="display:none; margin-top:1em; color:green;">
+        Thanks for uploading your weight! Come back in 48 hours.
+    </div>
+
+    <script>
+        // Fetch user data from API and update UI
+        fetch('https://api.example.com/user')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('name').textContent = 'Name: ' + data.name;
+                document.getElementById('current-weight').textContent = 'Weight: ' + data.weight + ' kg';
+            });
+
+        const form = document.getElementById('weight-form');
+        const addBtn = document.getElementById('add-btn');
+        const thanksMessage = document.getElementById('thanks-message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const weight = document.getElementById('weight').value;
+            addBtn.disabled = true;
+            fetch('https://api.example.com/user/weight', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ weight: weight })
+            })
+            .then(res => res.json())
+            .then(() => {
+                thanksMessage.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
