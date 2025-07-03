@@ -40,6 +40,27 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+        	<groupId>org.seleniumhq.selenium</groupId>
+        	<artifactId>selenium-java</artifactId>
+        	<version>4.21.0</version>
+    	</dependency>
+
+    	<!-- JUnit Jupiter (para pruebas) -->
+    	<dependency>
+        	<groupId>org.junit.jupiter</groupId>
+        	<artifactId>junit-jupiter</artifactId>
+        	<version>5.10.2</version>
+        	<scope>test</scope>
+    	</dependency>
+
+    	<!-- WebDriverManager: gestiona el driver automáticamente -->
+    	<dependency>
+        	<groupId>io.github.bonigarcia</groupId>
+        	<artifactId>webdrivermanager</artifactId>
+        	<version>5.8.0</version>
+    	</dependency>
 	</dependencies>
 
 	<build>
