@@ -30,8 +30,9 @@
 		<java.version>17</java.version>
 		<!-- SonarQube Properties -->
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.organization>your-org</sonar.organization>
-		<sonar.projectKey>your-project-key</sonar.projectKey>
+		<sonar.organization>${env.SONAR_ORGANIZATION}</sonar.organization>
+    	<sonar.projectKey>${env.SONAR_PROJECT_KEY}</sonar.projectKey>
+    	<sonar.login>${env.SONARQUBE_TOKEN}</sonar.login>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.language>java</sonar.language>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
