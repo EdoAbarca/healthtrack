@@ -1,62 +1,68 @@
-// src/test/java/com/healthtrack/SeleniumFunctionalTest.java
+package com.weight.healthtrack.selenium;
 
-package com.healthtrack;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.chrome.ChromeOptions;
+import static org.junit.Assert.*;
 
-import java.time.Duration;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SeleniumFunctionalTest {
+public class HealthtrackUITest {
 
     private WebDriver driver;
-    private WebDriverWait wait;
+    private String baseUrl;
 
-    @BeforeAll
-    void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();  // Puedes usar FirefoxDriver si lo prefieres
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
-
-    @AfterAll
-    void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+    @Before
+    public void setUp() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--disable-gpu");
+        //options.addArguments("--window-size=1920,1200");
+        options.addArguments("--ignore-certificate-errors");
+        
+        driver = new ChromeDriver(options);
+        baseUrl = "http://localhost:8080";
     }
 
     @Test
-    void testUserWeightSubmission() {
-        // 1. Ir al sitio (el HTML servido por Nginx)
-        driver.get("http://localhost");  // o usa el puerto que hayas mapeado
+    public void testUserDataDisplay() {
+        driver.get(baseUrl);
+        
+        WebElement nameElement = driver.findElement(By.id("name"));
+        WebElement weightElement = driver.findElement(By.id("current-weight"));
+        
+        assertTrue(nameElement.getText().contains("Eduardo"));
+        assertTrue(weightElement.getText().contains("75.0"));
+    }
 
-        // 2. Esperar a que cargue el nombre del usuario
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("name"), "Name:"));
+    @Test
+    public void testWeightUpdate() {
+        driver.get(baseUrl);
+        
+        WebElement weightInput = driver.findElement(By.id("weight"));
+        WebElement addButton = driver.findElement(By.id("add-btn"));
+        WebElement thanksMessage = driver.findElement(By.id("thanks-message"));
+        
+        weightInput.sendKeys("75.0");
+        addButton.click();
+        
+        // Wait for the update to complete (simplified for example)
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        assertTrue(thanksMessage.isDisplayed());
+    }
 
-        // 3. Verificar que los datos iniciales se cargaron
-        WebElement name = driver.findElement(By.id("name"));
-        WebElement weight = driver.findElement(By.id("current-weight"));
-
-        Assertions.assertTrue(name.getText().startsWith("Name:"));
-        Assertions.assertTrue(weight.getText().contains("Weight:"));
-
-        // 4. Enviar nuevo peso
-        WebElement input = driver.findElement(By.id("weight"));
-        input.clear();
-        input.sendKeys("82.5");
-
-        driver.findElement(By.id("add-btn")).click();
-
-        // 5. Verificar que aparece el mensaje de agradecimiento
-        WebElement thanks = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(By.id("thanks-message"))
-        );
-
-        Assertions.assertTrue(thanks.isDisplayed());
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
