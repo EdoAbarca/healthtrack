@@ -30,7 +30,7 @@
 
     <script>
         // Fetch user data from API and update UI
-        fetch('https://api.example.com/user')
+        fetch('http://localhost:8080/usuario')
             .then(res => res.json())
             .then(data => {
                 document.getElementById('name').textContent = 'Name: ' + data.name;
@@ -45,8 +45,8 @@
             e.preventDefault();
             const weight = document.getElementById('weight').value;
             addBtn.disabled = true;
-            fetch('https://api.example.com/user/weight', {
-                method: 'POST',
+            fetch('http://localhost:8080//usuario/actualizar', {
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ weight: weight })
             })
