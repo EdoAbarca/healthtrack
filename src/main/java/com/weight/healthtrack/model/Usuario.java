@@ -19,9 +19,9 @@ public class Usuario {
 
     public void actualizarPeso(double nuevoPeso) {
         // ERROR: En lugar de asignar el nuevo peso, se está restando 1kg.
-        this.peso -= 1;
+        //this.peso -= 1;
         // Corrige el error: asigna el nuevo peso en vez de restar 1kg
-        //this.peso = nuevoPeso;
+        this.peso = nuevoPeso;
     }
 
     // Método en desuso, debería ser visible en SonarQube como código muerto
