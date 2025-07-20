@@ -2,6 +2,9 @@ package com.weight.healthtrack.service;
 
 import com.weight.healthtrack.model;
 import org.springframework.web.bind.annotation.*;
+//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
 
 public class UsuarioController {
 
