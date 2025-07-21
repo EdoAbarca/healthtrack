@@ -20,6 +20,7 @@ class UsuarioServiceTest {
         Usuario usuario = usuarioService.obtenerUsuario();
         assertNotNull(usuario);
         assertEquals("Eduardo", usuario.getNombre());
+        assertEquals(75.0, usuario.getPeso());
     }
 
     @Test

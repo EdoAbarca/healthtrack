@@ -1,8 +1,7 @@
-package com.weight.healthtrack.service;
+package com.weight.healthtrack.controller;
 
 import com.weight.healthtrack.model;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
@@ -16,8 +15,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuario")
-    public String mostrarInformacion() {
-        return usuarioService.obtenerUsuario();
+    public ResponseEntity<?> mostrarInformacion() {
+        var usuario = usuarioService.obtenerUsuario();
+        Map<String, Object> response = Map.of(
+            "name", usuario.getNombre(),
+            "current-weight", usuario.getPeso()
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/usuario/actualizar")
