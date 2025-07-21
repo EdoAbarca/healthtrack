@@ -1,6 +1,8 @@
 package com.weight.healthtrack.controller;
 
-import com.weight.healthtrack.model;
+import com.weight.healthtrack.model.Usuario;
+import com.weight.healthtrack.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
@@ -40,6 +42,6 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body("'weight' must be zero or positive.");
         }
         usuarioService.actualizarPeso(peso);
-        return ResponseEntity.ok(usuarioService.obtenerUsuario());
+        return ResponseEntity.ok("Weight updated successfully, come back in 48 hours!");
     }
 }

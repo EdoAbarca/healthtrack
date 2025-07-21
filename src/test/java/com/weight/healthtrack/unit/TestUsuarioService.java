@@ -1,6 +1,7 @@
 package com.weight.healthtrack;
 
 import com.weight.healthtrack.service.UsuarioService;
+import com.weight.healthtrack.model.Usuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

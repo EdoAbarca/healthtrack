@@ -1,6 +1,6 @@
 package com.weight.healthtrack.service;
 
-import com.weight.healthtrack.model;
+import com.weight.healthtrack.model.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service

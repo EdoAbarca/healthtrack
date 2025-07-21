@@ -1,7 +1,7 @@
 package com.weight.healthtrack.controller;
 
+import com.weight.healthtrack.model.Usuario;
 import com.weight.healthtrack.service.UsuarioService;
-import com.weight.healthtrack.controller.UsuarioController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,9 +26,9 @@ class TestUsuarioController {
 
     @Test
     void testMostrarInformacion() {
-        when(usuarioService.obtenerUsuario()).thenReturn("Usuario info");
-        String result = usuarioController.mostrarInformacion();
-        assertEquals("Usuario info", result);
+        when(usuarioService.obtenerUsuario()).thenReturn(new Usuario("Eduardo", 75.0));
+        ResponseEntity<?> response = usuarioController.mostrarInformacion();
+        assertEquals(200, response.getStatusCodeValue());
         verify(usuarioService, times(1)).obtenerUsuario();
     }
 
@@ -36,15 +36,21 @@ class TestUsuarioController {
     void testActualizarPesoSuccess() {
         Map<String, Object> body = new HashMap<>();
         body.put("weight", 70.5);
-        when(usuarioService.obtenerUsuario()).thenReturn("Usuario actualizado");
+        Usuario usuarioMock = new Usuario("Eduardo", 70.5);
+        when(usuarioService.obtenerUsuario()).thenReturn(usuarioMock);
 
         ResponseEntity<?> response = usuarioController.actualizarPeso(body);
 
         assertEquals(200, response.getStatusCodeValue());
-        assertEquals("Usuario actualizado", response.getBody());
+
+        Usuario usuario = (Usuario) response.getBody();
+        assertEquals("Eduardo", usuario.getNombre());
+        assertEquals(70.5, usuario.getPeso());
+
         verify(usuarioService, times(1)).actualizarPeso(70.5);
         verify(usuarioService, times(1)).obtenerUsuario();
     }
+
 
     @Test
     void testActualizarPesoMissingWeight() {
@@ -82,3 +88,4 @@ class TestUsuarioController {
         assertEquals(400, response.getStatusCodeValue());
         assertEquals("Missing 'weight' field in request body.", response.getBody());
     }
+}
