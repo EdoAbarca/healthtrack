@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
+@RestController
+@RequestMapping("/api")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -21,7 +23,7 @@ public class UsuarioController {
         Usuario usuario = usuarioService.obtenerUsuario();
         Map<String, Object> response = Map.of(
             "name", usuario.getNombre(),
-            "current-weight", usuario.getPeso()
+            "current_weight", usuario.getPeso()
         );
         return ResponseEntity.ok(response);
     }
@@ -44,7 +46,7 @@ public class UsuarioController {
         usuarioService.actualizarPeso(peso);
         Map<String, Object> response = Map.of(
             "name", usuarioService.obtenerUsuario().getNombre(),
-            "current-weight", usuarioService.obtenerUsuario().getPeso(),
+            "current_weight", usuarioService.obtenerUsuario().getPeso(),
             "message", "Weight updated successfully, come back in 48 hours!"
         );
         return ResponseEntity.ok(response);

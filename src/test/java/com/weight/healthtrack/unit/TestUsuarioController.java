@@ -45,7 +45,7 @@ class TestUsuarioController {
 
         Map<String, Object> expectedResponse = Map.of(
             "name", "Eduardo",
-            "current-weight", 70.5,
+            "current_weight", 70.5,
             "message", "Weight updated successfully, come back in 48 hours!"
         );
         assertEquals(expectedResponse, response.getBody());

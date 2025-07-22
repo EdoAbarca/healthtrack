@@ -30,11 +30,11 @@
 
     <script>
         // Fetch user data from API and update UI
-        fetch('http://localhost:8080/usuario')
+        fetch('http://localhost:8080/api/usuario')
             .then(res => res.json())
             .then(data => {
                 document.getElementById('name').textContent = 'Name: ' + data.name;
-                document.getElementById('current-weight').textContent = 'Weight: ' + data.weight + ' kg';
+                document.getElementById('current-weight').textContent = 'Weight: ' + data.current_weight + ' kg';
             });
 
         const form = document.getElementById('weight-form');
@@ -45,14 +45,31 @@
             e.preventDefault();
             const weight = document.getElementById('weight').value;
             addBtn.disabled = true;
-            fetch('http://localhost:8080//usuario/actualizar', {
+            fetch('http://localhost:8080/api/usuario/actualizar', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ weight: weight })
             })
-            .then(res => res.json())
-            .then(() => {
+            .then(async res => {
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('name').textContent = 'Name: ' + data.name;
+                    document.getElementById('current-weight').textContent = 'Weight: ' + data.current_weight + ' kg';
+                    thanksMessage.style.color = 'green';
+                    thanksMessage.textContent = data.message;
+                    thanksMessage.style.display = 'block';
+                } else {
+                    thanksMessage.style.color = 'red';
+                    thanksMessage.textContent = data.message || 'An error occurred.';
+                    thanksMessage.style.display = 'block';
+                }
+                addBtn.disabled = false;
+            })
+            .catch(() => {
+                thanksMessage.style.color = 'red';
+                thanksMessage.textContent = 'Network error.';
                 thanksMessage.style.display = 'block';
+                addBtn.disabled = false;
             });
         });
     </script>
