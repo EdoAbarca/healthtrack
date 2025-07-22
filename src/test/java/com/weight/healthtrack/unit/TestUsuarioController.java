@@ -35,7 +35,7 @@ class TestUsuarioController {
     @Test
     void testActualizarPesoSuccess() {
         Map<String, Object> body = new HashMap<>();
-        body.put("weight", 70.5);
+        body.put("weight", 72.5);
         Usuario usuarioMock = new Usuario("Eduardo", 70.5);
         when(usuarioService.obtenerUsuario()).thenReturn(usuarioMock);
 
@@ -43,12 +43,14 @@ class TestUsuarioController {
 
         assertEquals(200, response.getStatusCodeValue());
 
-        Usuario usuario = (Usuario) response.getBody();
-        assertEquals("Eduardo", usuario.getNombre());
-        assertEquals(70.5, usuario.getPeso());
-
-        verify(usuarioService, times(1)).actualizarPeso(70.5);
-        verify(usuarioService, times(1)).obtenerUsuario();
+        Map<String, Object> expectedResponse = Map.of(
+            "name", "Eduardo",
+            "current-weight", 70.5,
+            "message", "Weight updated successfully, come back in 48 hours!"
+        );
+        assertEquals(expectedResponse, response.getBody());
+        verify(usuarioService, times(1)).actualizarPeso(72.5);
+        verify(usuarioService, times(2)).obtenerUsuario();
     }
 
 

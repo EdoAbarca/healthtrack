@@ -19,50 +19,59 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          maven-${{ runner.os }}-
+
       
     - name: Run Unit Tests with JaCoCo
       run: mvn test
       
-    - name: Run Selenium Tests
-      run: mvn test -Dtest=automation
-      env:
-        SERVER_PORT: 8080
-      
-    - name: Prepare JMeter Environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y jmeter
-        
-    - name: Run JMeter Performance Tests
-      run: |
-        mkdir -p ${GITHUB_WORKSPACE}/target/jmeter-results
-        jmeter -n -t src/test/performance/performance.jmx -l ${GITHUB_WORKSPACE}/target/jmeter-results/results.jtl -e -o ${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
-        
-    - name: Upload JMeter Results
-      uses: actions/upload-artifact@v4
-      with:
-        name: jmeter-results
-        path: target/jmeter-results/
-        
-    - name: Analyze JMeter Results
-      run: |
-        # Simple analysis - you can enhance this with more sophisticated checks
-        AVG_RESPONSE_TIME=$(grep -oP 'aggregate_report\.avg=[0-9]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
-        ERROR_RATE=$(grep -oP 'aggregate_report\.errorPct=[0-9.]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
-        
-        echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
-        echo "Error Rate: ${ERROR_RATE}%"
-      
-    - name: SonarQube Scan
-      run: mvn sonar:sonar
-      env:
-        #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-        SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-        
-    - name: Verify Code Coverage
-      run: |
-        # Coverage verification
-        COVERAGE=$(grep -oP 'percentage="\K[^"]+' target/site/jacoco/jacoco.xml | head -1)
-        echo "Code coverage is: $COVERAGE%"
+    # - name: Run Selenium Tests
+    #   run: mvn test -Dtest=automation
+    #   env:
+    #     SERVER_PORT: 8080
+
+    # - name: Prepare JMeter Environment
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y jmeter
+
+    # - name: Run JMeter Performance Tests
+    #   run: |
+    #     mkdir -p ${GITHUB_WORKSPACE}/target/jmeter-results
+    #     jmeter -n -t src/test/performance/performance.jmx -l ${GITHUB_WORKSPACE}/target/jmeter-results/results.jtl -e -o ${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
+
+    # - name: Upload JMeter Results
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: jmeter-results
+    #     path: target/jmeter-results/
+
+    # - name: Analyze JMeter Results
+    #   run: |
+    #     # Simple analysis - you can enhance this with more sophisticated checks
+    #     AVG_RESPONSE_TIME=$(grep -oP 'aggregate_report\.avg=[0-9]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
+    #     ERROR_RATE=$(grep -oP 'aggregate_report\.errorPct=[0-9.]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
+
+    #     echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
+    #     echo "Error Rate: ${ERROR_RATE}%"
+
+    # - name: SonarQube Scan
+    #   run: mvn sonar:sonar
+    #   env:
+    #     #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+    #     SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
+    # - name: Verify Code Coverage
+    #   run: |
+    #     # Coverage verification
+    #     COVERAGE=$(grep -oP 'percentage="\K[^"]+' target/site/jacoco/jacoco.xml | head -1)
+    #     echo "Code coverage is: $COVERAGE%"

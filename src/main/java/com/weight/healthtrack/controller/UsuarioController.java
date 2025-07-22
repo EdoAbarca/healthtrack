@@ -18,7 +18,7 @@ public class UsuarioController {
 
     @GetMapping("/usuario")
     public ResponseEntity<?> mostrarInformacion() {
-        var usuario = usuarioService.obtenerUsuario();
+        Usuario usuario = usuarioService.obtenerUsuario();
         Map<String, Object> response = Map.of(
             "name", usuario.getNombre(),
             "current-weight", usuario.getPeso()
@@ -42,6 +42,11 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body("'weight' must be zero or positive.");
         }
         usuarioService.actualizarPeso(peso);
-        return ResponseEntity.ok("Weight updated successfully, come back in 48 hours!");
+        Map<String, Object> response = Map.of(
+            "name", usuarioService.obtenerUsuario().getNombre(),
+            "current-weight", usuarioService.obtenerUsuario().getPeso(),
+            "message", "Weight updated successfully, come back in 48 hours!"
+        );
+        return ResponseEntity.ok(response);
     }
 }
