@@ -10,7 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import static org.junit.Assert.*;
 
-public class HealthtrackUITest {
+public class AutomationTest {
 
     private WebDriver driver;
     private String baseUrl;
@@ -46,7 +46,7 @@ public class HealthtrackUITest {
         WebElement addButton = driver.findElement(By.id("add-btn"));
         WebElement thanksMessage = driver.findElement(By.id("thanks-message"));
         
-        weightInput.sendKeys("75.0");
+        weightInput.sendKeys("85.0");
         addButton.click();
         
         // Wait for the update to complete (simplified for example)
