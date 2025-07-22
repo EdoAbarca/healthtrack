@@ -29,38 +29,35 @@ jobs:
           maven-${{ runner.os }}-
 
       
-    - name: Run Unit Tests with JaCoCo
-      run: mvn test
+    - name: Run Unit Tests
+      run: mvn test -Dtest=unit
       
-    # - name: Run Selenium Tests
-    #   run: mvn test -Dtest=automation
-    #   env:
-    #     SERVER_PORT: 8080
+    - name: Run Selenium Tests
+      run: mvn test -Dtest=automation
 
-    # - name: Prepare JMeter Environment
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install -y jmeter
+    - name: Prepare JMeter Environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jmeter
 
-    # - name: Run JMeter Performance Tests
-    #   run: |
-    #     mkdir -p ${GITHUB_WORKSPACE}/target/jmeter-results
-    #     jmeter -n -t src/test/performance/performance.jmx -l ${GITHUB_WORKSPACE}/target/jmeter-results/results.jtl -e -o ${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
+    - name: Run JMeter Performance Tests
+      run: |
+        mkdir -p ${GITHUB_WORKSPACE}/target/jmeter-results
+        jmeter -n -t src/test/java/com/weight/healthtrack/performance/performance.jmx -l ${GITHUB_WORKSPACE}/target/jmeter-results/results.jtl -e -o ${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
 
-    # - name: Upload JMeter Results
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: jmeter-results
-    #     path: target/jmeter-results/
+    - name: Upload JMeter Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: jmeter-results
+        path: target/jmeter-results/
 
-    # - name: Analyze JMeter Results
-    #   run: |
-    #     # Simple analysis - you can enhance this with more sophisticated checks
-    #     AVG_RESPONSE_TIME=$(grep -oP 'aggregate_report\.avg=[0-9]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
-    #     ERROR_RATE=$(grep -oP 'aggregate_report\.errorPct=[0-9.]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
+    - name: Analyze JMeter Results
+      run: |
+        AVG_RESPONSE_TIME=$(grep -oP 'aggregate_report\.avg=[0-9]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
+        ERROR_RATE=$(grep -oP 'aggregate_report\.errorPct=[0-9.]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
 
-    #     echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
-    #     echo "Error Rate: ${ERROR_RATE}%"
+        echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
+        echo "Error Rate: ${ERROR_RATE}%"
 
     # - name: SonarQube Scan
     #   run: mvn sonar:sonar
