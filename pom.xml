@@ -14,7 +14,7 @@
     <artifactId>healthtrack</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>healthtrack</name>
-    <description>Demo weight measure project for Spring Boot</description>
+    <description>Weight measure project for Spring Boot</description>
     
     <properties>
         <java.version>17</java.version>
@@ -44,13 +44,19 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.11.0</version>
+            <version>4.34.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-chrome-driver</artifactId>
-            <version>4.11.0</version>
+            <version>4.34.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.8.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -96,11 +102,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version> <!-- Updated version -->
+                <version>3.0.0-M7</version>
                 <configuration>
-                    <argLine>${surefireArgLine}</argLine>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/Test*.java</include>
+                    </includes>
                 </configuration>
             </plugin>
+
             
             <!-- JMeter Configuration -->
             <plugin>
