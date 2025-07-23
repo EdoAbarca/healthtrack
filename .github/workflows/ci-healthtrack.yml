@@ -41,30 +41,38 @@ jobs:
     - name: Run Selenium Tests
       run: mvn clean test -Dgroups=automation
 
-    - name: Prepare JMeter Environment
+    - name: Download and Setup Latest JMeter
       run: |
-        sudo apt-get update
-        sudo apt-get install -y jmeter
+        JMETER_VERSION="5.6.3"
+        wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz
+        tar -xzf apache-jmeter-${JMETER_VERSION}.tgz
+        export JMETER_HOME=$PWD/apache-jmeter-${JMETER_VERSION}
+        echo "$JMETER_HOME/bin" >> $GITHUB_PATH
 
     - name: Run JMeter Performance Tests
       run: |
         mkdir -p ${GITHUB_WORKSPACE}/target/jmeter-results
-        jmeter -n -t src/test/java/com/weight/healthtrack/performance/performance.jmx -l ${GITHUB_WORKSPACE}/target/jmeter-results/results.jtl -e -o ${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
+        jmeter -n -t src/test/java/com/weight/healthtrack/performance/performance.jmx \
+          -l ${GITHUB_WORKSPACE}/target/jmeter-results/results.jtl \
+          -e -o ${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
+
+    - name: Analyze JMeter Results
+      run: |
+        DASHBOARD_DIR=${GITHUB_WORKSPACE}/target/jmeter-results/dashboard
+        STATS_FILE="${DASHBOARD_DIR}/statistics.json"
+
+        AVG_RESPONSE_TIME=$(grep -oP 'aggregate_report\.avg=[0-9]+' "$STATS_FILE" | cut -d= -f2)
+        ERROR_RATE=$(grep -oP 'aggregate_report\.errorPct=[0-9.]+' "$STATS_FILE" | cut -d= -f2)
+
+        echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
+        echo "Error Rate: ${ERROR_RATE}%"
 
     - name: Upload JMeter Results
       uses: actions/upload-artifact@v4
       with:
         name: jmeter-results
         path: target/jmeter-results/
-
-    - name: Analyze JMeter Results
-      run: |
-        AVG_RESPONSE_TIME=$(grep -oP 'aggregate_report\.avg=[0-9]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
-        ERROR_RATE=$(grep -oP 'aggregate_report\.errorPct=[0-9.]+' target/jmeter-results/dashboard/statistics.json | cut -d= -f2)
-
-        echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
-        echo "Error Rate: ${ERROR_RATE}%"
-    
+      
     - name: Stop Spring Boot App
       run: |
         kill $(cat app.pid)
