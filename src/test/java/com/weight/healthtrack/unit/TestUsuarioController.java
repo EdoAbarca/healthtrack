@@ -1,10 +1,11 @@
-package com.weight.healthtrack.controller;
+package com.weight.healthtrack.unit;
 
 import com.weight.healthtrack.model.Usuario;
 import com.weight.healthtrack.service.UsuarioService;
+import com.weight.healthtrack.controller.UsuarioController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.Tag;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
@@ -13,7 +14,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class TestUsuarioController {
+@Tag("unit")
+public class TestUsuarioController {
 
     private UsuarioService usuarioService;
     private UsuarioController usuarioController;
@@ -52,7 +54,6 @@ class TestUsuarioController {
         verify(usuarioService, times(1)).actualizarPeso(72.5);
         verify(usuarioService, times(2)).obtenerUsuario();
     }
-
 
     @Test
     void testActualizarPesoMissingWeight() {

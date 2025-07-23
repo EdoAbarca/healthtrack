@@ -1,11 +1,13 @@
-package com.weight.healthtrack.model;
+package com.weight.healthtrack.unit;
 import com.weight.healthtrack.model.Usuario;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UsuarioTest {
-
+@Tag("unit")
+public class TestUsuario {
+    
     @Test
     void testActualizarPeso() {
         Usuario usuario = new Usuario("Eduardo", 75.0);
