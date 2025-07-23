@@ -32,10 +32,14 @@ jobs:
     - name: Run Unit Tests
       run: mvn clean test -Dgroups=unit
       
-    - name: Run Selenium Tests
+    - name: Run Spring Boot in background and store PID
       run: |
-        mvn spring-boot:run
-        mvn clean test -Dgroups=automation
+        nohup mvn spring-boot:run > app.log 2>&1 &
+        echo $! > app.pid
+        sleep 15
+
+    - name: Run Selenium Tests
+      run: mvn clean test -Dgroups=automation
 
     - name: Prepare JMeter Environment
       run: |
@@ -60,6 +64,10 @@ jobs:
 
         echo "Average Response Time: ${AVG_RESPONSE_TIME}ms"
         echo "Error Rate: ${ERROR_RATE}%"
+    
+    - name: Stop Spring Boot App
+      run: |
+        kill $(cat app.pid)
 
     # - name: SonarQube Scan
     #   run: mvn sonar:sonar
