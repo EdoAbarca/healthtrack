@@ -30,10 +30,12 @@ jobs:
 
       
     - name: Run Unit Tests
-      run: mvn test -Dtest=unit
+      run: mvn clean test -Dgroups=unit
       
     - name: Run Selenium Tests
-      run: mvn test -Dtest=automation
+      run: |
+        mvn spring-boot:run
+        mvn clean test -Dgroups=automation
 
     - name: Prepare JMeter Environment
       run: |
