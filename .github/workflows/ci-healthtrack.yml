@@ -57,6 +57,11 @@ jobs:
     - name: Run Code Coverage Analysis
       run: mvn clean test jacoco:report
 
+    - name: Verify Code Coverage
+      run: |
+        COVERAGE=$(grep -oP 'percentage="\K[^"]+' target/site/jacoco/jacoco.xml | head -1)
+        echo "Code coverage is: $COVERAGE%"
+
     - name: Upload Code Coverage Report
       uses: actions/upload-artifact@v4
       with:
@@ -99,15 +104,17 @@ jobs:
     - name: Stop Spring Boot App
       run: |
         kill $(cat app.pid)
+    
+    - name: Cache SonarQube packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
 
     - name: SonarQube Scan
-      run: mvn sonar:sonar
+      run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-
-    - name: Verify Code Coverage
-      run: |
-        COVERAGE=$(grep -oP 'percentage="\K[^"]+' target/site/jacoco/jacoco.xml | head -1)
-        echo "Code coverage is: $COVERAGE%"
